@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 # Описание:
 # Проверка наличия указанной конфигурации
@@ -42,19 +42,20 @@ def errexit(entry):  # errexit - показать правильное испо�
 
 def get_args(entry):
     args = entry.split()
-    if args[0] == '!':
-        args[0] = False
-    elif '!' in args[0]:
-        args[0] = args[0][1:]
-        args[0].strip()
-        args.insert(0, False)
-    else:
-        args.insert(0, True)
+    if args:
+        if args[0] == '!':
+            args[0] = False
+        elif '!' in args[0]:
+            args[0] = args[0][1:]
+            args[0].strip()
+            args.insert(0, False)
+        else:
+            args.insert(0, True)
 
-    if args[1] in tasks.keys():  # проверка синтаксиса
-        return args
-    else:
-        errexit(entry)
+        if args[1] in tasks.keys():  # проверка синтаксиса
+            return args
+        else:
+            errexit(entry)
 
 
 tasks = {
@@ -73,5 +74,8 @@ if len(sys.argv) > 1:
 with open(config_path) as f:
     entries = f.readlines()
     for entry in entries:
+        if entry[:1] == '#':  # комментарии пропускаются
+            continue
         entry_args = get_args(entry)
-        tasks[entry_args[1]](entry_args)
+        if entry_args:
+            tasks[entry_args[1]](entry_args)

@@ -1,3 +1,7 @@
-file ./test/test1.txt
-!file ./test/test00.txt
-! file ./test/test00.txt
+# comment
+!file /home/idonotexist
+! file file
+
+ 
+file /home/kali
+  
