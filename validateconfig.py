@@ -143,8 +143,12 @@ with open(config_path) as f:
         line += 1
         entry_args = get_args(entry)  # получение аргументов
         if entry_args:
-            # Проверка на соответствие конфигурации
-            # текущим параметрам системы
-            if not(tasks[entry_args[1]][0](entry_args)):
-                # Сообщение о непрохождении проверки
-                print(f"Fail in line {line}: {entry.strip()}")
+            try:
+                # Проверка на соответствие конфигурации
+                # текущим параметрам системы
+                if not(tasks[entry_args[1]][0](entry_args)):
+                    # Сообщение о непрохождении проверки
+                    print(f"Fail in line {line}: {entry.strip()}")
+            except Exception as e:
+                # Сообщение о возникновении исключения при обработке сроки
+                print(f"Caught exception in line {line}: {entry.strip()}\n", e)
