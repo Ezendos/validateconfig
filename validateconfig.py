@@ -21,7 +21,11 @@ import grp  # доступ к базе данных групп Unix
 
 
 def vfile(args):  # file - проверка наличия имени файла
-    return True
+    fname = pathlib.Path(args[2])
+    if fname.is_file():
+        print("File exist.")
+    else:
+        print("No such file.")
 
 
 def vhash(args):  # hash
@@ -29,11 +33,17 @@ def vhash(args):  # hash
 
 
 def vuser(args):  # user
-    return True
+    try:
+      pwd.getpwnam(args[2])
+    except KeyError:
+      print('User does not exist.')
 
 
 def vgroup(args):  # group
-    return True
+    try:
+      grp.getgrnam(args[2])
+    except KeyError:
+      print('Group does not exist.')
 
 
 # errexit показать правильное использование и выйти
