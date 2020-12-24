@@ -16,7 +16,8 @@
 
 import sys
 import pathlib
-#import pwd, grp
+import pwd
+import grp
 
 
 def vfile(args):  # file - проверка наличия имени файла
@@ -35,7 +36,7 @@ def vgroup(args):  # group
     return True
 
 
-def errexit(entry, argnum=0): # errexit показать правильное использование и выйти
+def errexit(entry, argnum=0):  # errexit показать правильное использование и выйти
     print(f"invalid syntax in entry\n{entry.strip()}")
     if argnum:
         print(f"key takes {argnum} arguments")
@@ -79,6 +80,8 @@ config_path = pathlib.Path('config.txt')  # конфигурационный ф�
 if len(sys.argv) > 1:
     config_path = pathlib.Path(sys.argv[1])
 
+users = pwd.getpwall()
+groups = grp.getgrall()
 
 with open(config_path) as f:
     line = 0
