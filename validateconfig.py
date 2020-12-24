@@ -16,6 +16,7 @@
 
 import sys
 import pathlib
+#import pwd, grp
 
 
 def vfile(args):  # file - проверка наличия имени файла
@@ -34,9 +35,12 @@ def vgroup(args):  # group
     return True
 
 
-def errexit(entry):  # errexit - показать правильное использование и выйти
+def errexit(entry, argnum=0): # errexit показать правильное использование и выйти
     print(f"invalid syntax in entry\n{entry.strip()}")
-    print("usage: [!]file|hash|[!]user|[!]group [args]")
+    if argnum:
+        print(f"key takes {argnum} arguments")
+    else:
+        print("usage: [!]file|hash|[!]user|[!]group [args]")
     sys.exit()
 
 
@@ -54,18 +58,20 @@ def get_args(entry):
             args.insert(0, True)
         else:
             args.insert(0, False)
-
-        if args[1] in tasks.keys():  # проверка синтаксиса
-            return args
-        else:
+        print(args)
+        # проверка синтаксиса
+        if args[1] not in tasks.keys():
             errexit(entry)
+        if len(args) != tasks[args[1]][1] + 1:
+            errexit(entry, tasks[args[1]][1])
+        return(args)
 
 
 tasks = {
-    'file': vfile,
-    'hash': vhash,
-    'user': vuser,
-    'group': vgroup
+    'file': (vfile, 2),
+    'hash': (vhash, 3),
+    'user': (vuser, 2),
+    'group': (vgroup, 2),
 }
 
 config_path = pathlib.Path('config.txt')  # конфигурационный файл по-умолчанию
@@ -81,5 +87,5 @@ with open(config_path) as f:
         line += 1
         entry_args = get_args(entry)
         if entry_args:
-            if tasks[entry_args[1]](entry_args):
-                print(f"Fault in line {line}: {entry.strip()}")
+            if tasks[entry_args[1]][0](entry_args):
+                print(f"Fail in line {line}: {entry.strip()}")

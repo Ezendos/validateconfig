@@ -3,5 +3,5 @@
 ! file file
 
  
-file /home/kali
+file /home/kali 12
   
