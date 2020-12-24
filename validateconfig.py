@@ -18,64 +18,72 @@ import sys
 import pathlib  # работа с путями
 import pwd  # доступ к базе данных учетных записей пользователей Unix
 import grp  # доступ к базе данных групп Unix
+import hashlib  # работа с хеш-функциями
 
 
-def vfile(args):  # file - проверка наличия имени файла
+# file проверка наличия имени файла
+def vfile(args):
     fname = pathlib.Path(args[2])
-    if args[0] == True:
-      if fname.is_file():
-          return False
-      else:
-          return True
+    if args[0] is True:
+        if fname.is_file():
+            return False
+        else:
+            return True
     else:
-      if fname.is_file():
-          return True
-      else:
-          return False
-        
-def vhash(args):  # hash
+        if fname.is_file():
+            return True
+        else:
+            return False
+
+
+# hash проверка хеша файла
+def vhash(args):
     a = hashlib.sha1()
     with open(args[3], "rb") as fh:
-      data = fh.read()
-      a.update(data)
+        data = fh.read()
+        a.update(data)
     if a.hexdigest() == args[2]:
-      return True
-    else:
-      return False
-
-def vuser(args):  # user
-    if args[0] == True:
-      try:
-        pwd.getpwnam(args[2])
-        return False
-      except KeyError:
         return True
     else:
-      try:
-        pwd.getpwnam(args[2])
-        return True
-      except KeyError:
         return False
 
-def vgroup(args):  # group
-  if args[0] == True:
-    try:
-      grp.getgrnam(args[2])
-      return False
-    except KeyError:
-      return True
-  else:
-      try:
-        grp.getgrnam(args[2])
-        return True
-      except KeyError:
-        return False
+
+# user проверка наличия пользователя
+def vuser(args):
+    if args[0] is True:
+        try:
+            pwd.getpwnam(args[2])
+            return False
+        except KeyError:
+            return True
+    else:
+        try:
+            pwd.getpwnam(args[2])
+            return True
+        except KeyError:
+            return False
+
+
+# group проверка наличия группы
+def vgroup(args):
+    if args[0] is True:
+        try:
+            grp.getgrnam(args[2])
+            return False
+        except KeyError:
+            return True
+    else:
+        try:
+            grp.getgrnam(args[2])
+            return True
+        except KeyError:
+            return False
 
 
 # errexit показать правильное использование и выйти
 def errexit(entry, argnum=0):
     print(f"invalid syntax in entry\n{entry.strip()}")
-    if argnum: # ошибка в количестве аргументов
+    if argnum:  # ошибка в количестве аргументов
         print(f"key takes {argnum} arguments")
     else:      # ошибка в ключевом аргументе
         print("usage: [!]file|hash|[!]user|[!]group [args]")
@@ -99,7 +107,6 @@ def get_args(entry):
             args.insert(0, True)
         else:
             args.insert(0, False)
-        print(args)
         # проверка синтаксиса
         # соответствие ключевого слова
         if args[1] not in tasks.keys():
@@ -110,7 +117,7 @@ def get_args(entry):
         return(args)
 
 
-# Словарь задач по сравнению конфигурации
+# Словарь задач по сравнению конфигураций
 # Формат:
 #     'ключевое_слово' : (функция, количество_аргументов)
 # ключевое_слово - имя проверяемой конфигурации
@@ -122,10 +129,10 @@ tasks = {
     'group': (vgroup, 2),
 }
 
-config_path = pathlib.Path('config.txt')  # config.txt - имя по умолчанию
+# config.txt - путь к конфигурационному файлу по умолчанию
+config_path = pathlib.Path('config.txt')
 
-# Передача аргументов коммандной строки скрипту
-#
+# Получение пути к файлу конфигурации из аргумента командной строки
 if len(sys.argv) > 1:
     config_path = pathlib.Path(sys.argv[1])
 
