@@ -4,20 +4,20 @@
 # Проверка наличия указанной конфигурации
 #
 # Использование:
-# validateconfig.py "путь к файлу конфигурации"
+# validateconfig.py [путь к файлу конфигурации]
 #
 # спецификация конфигурации:
 # [[!]file|hash|reg|[!]user|[!]group] [args]
 # примеры:
 # file /usr/local/bin/sfx - файл существует
-# hash 12384970347 /usr/local/bin/sfx - хеш файла
-# !user bono - нет разрешенного пользователя "bono"
+# hash 12384970347 /usr/local/bin/sfx - sha1 хеш файла
+# !user bono - не должно быть пользователя "bono"
 # group students - должна быть группа students
 
 import sys
 import pathlib  # работа с путями
-import pwd  # доступ к базе данных учетных записей пользователей Unix
-import grp  # доступ к базе данных групп Unix
+import pwd      # доступ к базе данных учетных записей пользователей *nix
+import grp      # доступ к базе данных групп Unix
 import hashlib  # работа с хеш-функциями
 
 
@@ -150,5 +150,5 @@ with open(config_path) as f:
                     # Сообщение о непрохождении проверки
                     print(f"Fail in line {line}: {entry.strip()}")
             except Exception as e:
-                # Сообщение о возникновении исключения при обработке сроки
+                # Сообщение о возникновении исключения при обработке строки
                 print(f"Caught exception in line {line}: {entry.strip()}\n", e)
