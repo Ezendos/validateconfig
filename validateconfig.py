@@ -22,31 +22,54 @@ import grp  # доступ к базе данных групп Unix
 
 def vfile(args):  # file - проверка наличия имени файла
     fname = pathlib.Path(args[2])
-    if fname.is_file():
-        print("File exist.")
+    if args[0] == True:
+      if fname.is_file():
+          return False
+      else:
+          return True
     else:
-        print("No such file.")
-
+      if fname.is_file():
+          return True
+      else:
+          return False
+        
 def vhash(args):  # hash
     a = hashlib.sha1()
     with open(args[3], "rb") as fh:
       data = fh.read()
       a.update(data)
     if a.hexdigest() == args[2]:
-      print('Является хэшом')
+      return True
+    else:
+      return False
+      
 def vuser(args):  # user
-    try:
-      pwd.getpwnam(args[2])
-    except KeyError:
-      print('User does not exist.')
-
+    if args[0] == True:
+      try:
+        pwd.getpwnam(args[2])
+        return False
+      except KeyError:
+        return True
+    else:
+      try:
+        pwd.getpwnam(args[2])
+        return True
+      except KeyError:
+        return False
 
 def vgroup(args):  # group
+  if args[0] == True:
     try:
       grp.getgrnam(args[2])
+      return False
     except KeyError:
-      print('Group does not exist.')
-
+      return True
+  else:
+      try:
+        grp.getgrnam(args[2])
+        return True
+      except KeyError:
+        return False
 
 # errexit показать правильное использование и выйти
 def errexit(entry, argnum=0):
