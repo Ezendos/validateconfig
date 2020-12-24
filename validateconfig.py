@@ -21,19 +21,31 @@ import grp  # доступ к базе данных групп Unix
 
 
 def vfile(args):  # file - проверка наличия имени файла
-    return True
-
+    fname = pathlib.Path(args[2])
+    if fname.is_file():
+        print("File exist.")
+    else:
+        print("No such file.")
 
 def vhash(args):  # hash
-    return True
-
-
+    a = hashlib.sha1()
+    with open(args[3], "rb") as fh:
+      data = fh.read()
+      a.update(data)
+    if a.hexdigest() == args[2]:
+      print('Является хэшом')
 def vuser(args):  # user
-    return True
+    try:
+      pwd.getpwnam(args[2])
+    except KeyError:
+      print('User does not exist.')
 
 
 def vgroup(args):  # group
-    return True
+    try:
+      grp.getgrnam(args[2])
+    except KeyError:
+      print('Group does not exist.')
 
 
 # errexit показать правильное использование и выйти
@@ -92,10 +104,6 @@ config_path = pathlib.Path('config.txt')  # config.txt - имя по умолч�
 #
 if len(sys.argv) > 1:
     config_path = pathlib.Path(sys.argv[1])
-
-# Получение данных о пользователях и группах
-users = pwd.getpwall()
-groups = grp.getgrall()
 
 with open(config_path) as f:
     line = 0  # счетчик линий
