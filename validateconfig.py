@@ -7,10 +7,10 @@
 # validateconfig.py [путь к файлу конфигурации]
 #
 # спецификация конфигурации:
-# [[!]file|hash|reg|[!]user|[!]group] [args]
+# [[!]file|hash|[!]user|[!]group] [args]
 # примеры:
 # file /usr/local/bin/sfx - файл существует
-# hash 12384970347 /usr/local/bin/sfx - sha1 хеш файла
+# hash 2fd4e1c67a2d28fced849ee1bb76e7391b93eb12 /home/foo.txt - sha1 хеш файла
 # !user bono - не должно быть пользователя "bono"
 # group students - должна быть группа students
 
@@ -21,7 +21,7 @@ import grp      # доступ к базе данных групп Unix
 import hashlib  # работа с хеш-функциями
 
 
-# file проверка наличия имени файла
+# file - проверка наличия имени файла
 def vfile(args):
     fname = pathlib.Path(args[2])
     if args[0] is True:
@@ -36,7 +36,7 @@ def vfile(args):
             return False
 
 
-# hash проверка хеша файла
+# hash - проверка хеша файла
 def vhash(args):
     a = hashlib.sha1()
     with open(args[3], "rb") as fh:
@@ -48,7 +48,7 @@ def vhash(args):
         return False
 
 
-# user проверка наличия пользователя
+# user - проверка наличия пользователя
 def vuser(args):
     if args[0] is True:
         try:
@@ -64,7 +64,7 @@ def vuser(args):
             return False
 
 
-# group проверка наличия группы
+# group - проверка наличия группы
 def vgroup(args):
     if args[0] is True:
         try:
@@ -80,7 +80,7 @@ def vgroup(args):
             return False
 
 
-# errexit показать правильное использование и выйти
+# errexit - показать правильное использование и выйти
 def errexit(entry, argnum=0):
     print(f"invalid syntax in entry\n{entry.strip()}")
     if argnum:  # ошибка в количестве аргументов
